@@ -20,7 +20,25 @@ process.on('message', function(data) {
 	}
 });
 
-
+/**********************
+ * 
+ * 
+ * { 
+ *      message_id: 324,
+ *      from: { 
+ *          id: 358212108,
+ *          is_bot: false,
+ *          first_name: 'Daniel',
+ *          language_code: 'de-DE' 
+ *      },
+ *      chat: { id: 358212108, first_name: 'Daniel', type: 'private' },
+ *      date: 1537122795,
+ *      text: 'Moin' 
+ * }
+ *
+ * 
+ * 
+ * *****************************/
 
 // Create a bot that uses 'polling' to fetch new updates
 try{
@@ -45,10 +63,21 @@ bot.onText(/\/echo (.+)/, (msg, match) => {
 // Listen for any kind of message. There are different kinds of
 // messages.
 bot.on('message', (msg) => {
-  const chatId = msg.chat.id;
+    const chatId = msg.chat.id;
+    if(chatId == ){
+        var data = {};
+        data.author = msg.from.first_name;
+        data.message = msg.text;
+        if(msg.entities[0].type == "url"){
+            data.type = 2;
+        }else{
+            data.type = 1;
+        }
+        process.send({"chatMessage": JSON.stringify(data)});
+    }
  
   // send a message to the chat acknowledging receipt of their message
-  bot.sendMessage(chatId, 'Received your message');
+//   bot.sendMessage(chatId, 'Received your message');
 });
 
 function sendMessage(data){
