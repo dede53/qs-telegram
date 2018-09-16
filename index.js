@@ -1,11 +1,17 @@
-const TelegramBot = require('node-telegram-bot-api');
- 
+const TelegramBot               = require('node-telegram-bot-api');
+var adapter					    =	require('../../adapter-lib.js');
+var telegram					=	new adapter("telegram");
+
 // replace the value below with the Telegram token you receive from @BotFather
 const token = '367772499:AAH37llKnAYwUzfIKqVV-k0gKj64TCd7V0Q';
  
 // Create a bot that uses 'polling' to fetch new updates
-const bot = new TelegramBot(token, {polling: true});
- 
+try{
+    const bot = new TelegramBot(token, {polling: true});
+    process.send({"statusMessage": "Verbunden"});
+}catch(error){
+    process.send({"statusMessage": "Konnte keine Verbingung herstellen"});
+}
 // Matches "/echo [whatever]"
 bot.onText(/\/echo (.+)/, (msg, match) => {
   // 'msg' is the received Message from Telegram
