@@ -64,7 +64,7 @@ bot.onText(/\/echo (.+)/, (msg, match) => {
 // messages.
 bot.on('message', (msg) => {
     const chatId = msg.chat.id;
-    if(chatId == ){
+    if(chatId == telegram.settings.familyGroup){
         var data = {};
         data.author = msg.from.first_name;
         data.message = msg.text;
