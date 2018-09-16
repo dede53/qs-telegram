@@ -3,11 +3,28 @@ var adapter					    =	require('../../adapter-lib.js');
 var telegram					=	new adapter("telegram");
 
 // replace the value below with the Telegram token you receive from @BotFather
-const token = '367772499:AAH37llKnAYwUzfIKqVV-k0gKj64TCd7V0Q';
- 
+var token = '367772499:AAH37llKnAYwUzfIKqVV-k0gKj64TCd7V0Q';
+
+process.on('message', function(data) {
+	var data = JSON.parse(data);
+	telegram.log.error(data.protocol);
+	switch(data.protocol){
+		case "setSetting":
+			telegram.setSetting(data.setSetting.name, data.setSetting.status);
+			break;
+		case "send":
+			sendMessage(data);
+		default:
+			telegram.log.error(data);
+			break;
+	}
+});
+
+
+
 // Create a bot that uses 'polling' to fetch new updates
 try{
-    const bot = new TelegramBot(token, {polling: true});
+    var bot = new TelegramBot(token, {polling: true});
     process.send({"statusMessage": "Verbunden"});
 }catch(error){
     process.send({"statusMessage": "Konnte keine Verbingung herstellen"});
@@ -33,3 +50,14 @@ bot.on('message', (msg) => {
   // send a message to the chat acknowledging receipt of their message
   bot.sendMessage(chatId, 'Received your message');
 });
+
+function sendMessage(data){
+    switch(data.type){
+        case "photo":
+            bot.sendPhoto(data.id, data.data);
+            break;
+        default:
+            bot.sendMessage(data.id, data.data.toString());
+            break;
+    }
+}
