@@ -1,0 +1,22 @@
+{
+  "name": "telegram",
+  "dependencies": {
+    "node-telegram-bot-api": "^0.30.0"
+  },
+  "version": "0.0.1",
+  "main": "none",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/dede53/qs-telegram.git"
+  },
+  "author": "dede53",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/dede53/qs-telegram/issues"
+  },
+  "homepage": "https://github.com/dede53/qs-telegram#readme",
+  "description": ""
+}
