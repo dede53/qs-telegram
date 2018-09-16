@@ -1,6 +1,6 @@
 {
     "loglevel":1,
     "port":1232,
-    "version":"0.0.1",
+    "version":"0.0.3",
     "useHTTPS":false
 }
