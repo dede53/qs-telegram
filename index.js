@@ -6,18 +6,17 @@ var telegram					=	new adapter("telegram");
 var token = '367772499:AAH37llKnAYwUzfIKqVV-k0gKj64TCd7V0Q';
 
 process.on('message', function(data) {
-	var data = JSON.parse(data);
-	telegram.log.error(data.protocol);
-	switch(data.protocol){
-		case "setSetting":
-			telegram.setSetting(data.setSetting.name, data.setSetting.status);
-			break;
-		case "send":
-			sendMessage(data);
-		default:
-			telegram.log.error(data);
-			break;
-	}
+  switch(data.protocol){
+    case "setSetting":
+      telegram.setSetting(data.setSetting.name, data.setSetting.status);
+      break;
+    case "send":
+      sendMessage(data);
+      break;
+    default:
+      telegram.log.error(data);
+      break;
+  }
 });
 
 /**********************
@@ -47,46 +46,34 @@ try{
 }catch(error){
     process.send({"statusMessage": "Konnte keine Verbingung herstellen"});
 }
-// Matches "/echo [whatever]"
-bot.onText(/\/echo (.+)/, (msg, match) => {
-  // 'msg' is the received Message from Telegram
-  // 'match' is the result of executing the regexp above on the text content
-  // of the message
- 
-  const chatId = msg.chat.id;
-  const resp = match[1]; // the captured "whatever"
- 
-  // send back the matched "whatever" to the chat
-  bot.sendMessage(chatId, resp);
-});
- 
-// Listen for any kind of message. There are different kinds of
-// messages.
-bot.on('message', (msg) => {
+
+bot.on('text', (msg) => {
     const chatId = msg.chat.id;
     if(chatId == telegram.settings.familyGroup){
         var data = {};
         data.author = msg.from.first_name;
         data.message = msg.text;
-        if(msg.entities[0].type == "url"){
-            data.type = 2;
+        if(msg.entities && msg.entities[0].type == "url"){
+             data.type = 2;
         }else{
-            data.type = 1;
+             data.type = 1;
         }
-        process.send({"chatMessage": JSON.stringify(data)});
+        process.send({"chatMessage": data});
+    }else{
+      telegram.log.error(chatId);
     }
- 
-  // send a message to the chat acknowledging receipt of their message
-//   bot.sendMessage(chatId, 'Received your message');
 });
 
 function sendMessage(data){
+    if(!data.receiver){
+      data.receiver = telegram.settings.familyGroup;
+    }
     switch(data.type){
         case "photo":
-            bot.sendPhoto(data.id, data.data);
+            bot.sendPhoto(data.receiver, data);
             break;
         default:
-            bot.sendMessage(data.id, data.data.toString());
+            bot.sendMessage(data.receiver, data.message.toString());
             break;
     }
 }
